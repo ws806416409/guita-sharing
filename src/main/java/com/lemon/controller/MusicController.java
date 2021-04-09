@@ -9,6 +9,7 @@ import com.lemon.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,6 +73,8 @@ public class MusicController {
         return jsonObject;
     }
 
+
+
     @RequestMapping("/getSheetInfo")
     @ApiOperation(value = "查看曲谱详情", notes = "传入曲谱主键id")
     public Object getInfo(@RequestParam Integer sheetId){
@@ -79,6 +82,14 @@ public class MusicController {
         Music sheetInfo = iMusicService.getById(sheetId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("sheetInfo",sheetInfo);
+        return jsonObject;
+    }
+
+    @GetMapping("/findAll")
+    public Object find(){
+        List<Music> list = iMusicService.list();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("all",list);
         return jsonObject;
     }
 
