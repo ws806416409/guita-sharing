@@ -88,10 +88,12 @@ public class UserController {
 
     @PostMapping("/updateInfo")
     public Object updateInfo(User user){
-        boolean b = iUserService.updateById(user);
+        QueryWrapper<User> qu = new QueryWrapper<>();
+        qu.eq("username", user.getUsername());
+        User us2 = iUserService.getOne(qu);
         JSONObject jsonObject = new JSONObject();
-        //若更新成功 返回success
-        if(b){
+        if(us2 == null || us2.getId() == user.getId()){
+            boolean b = iUserService.updateById(user);
             jsonObject.put("msg","success");
         }else{
             jsonObject.put("msg","false");

@@ -9,11 +9,7 @@ import com.lemon.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +30,23 @@ public class MusicController {
     @Autowired
     private IMusicService iMusicService;
 
+
+    @GetMapping("/getTypeList")
+    @ApiOperation(value = "获取类别列表")
+    public Object getTypeList(){
+        JSONObject jsonObject = new JSONObject();
+        QueryWrapper<Music> qu = new QueryWrapper<>();
+        qu.select("type");
+        qu.groupBy("type");
+        List<Music> list = iMusicService.list(qu);
+        List<String> typeList = new ArrayList<>();
+        for (Music music : list) {
+            typeList.add(music.getType());
+        }
+        jsonObject.put("typeList",typeList);
+        return jsonObject;
+    }
+
     @RequestMapping("/filterByType")
     @ApiOperation(value = "通过类别筛选", notes = "传入一个字符串类型的type")
     public Object filterByType(@RequestParam String type) {
@@ -45,7 +58,7 @@ public class MusicController {
         return jsonObject;
     }
 
-    @RequestMapping("getSingerList")
+    @GetMapping("getSingerList")
     @ApiOperation(value = "获取歌手列表")
     public Object getSingerList(){
         JSONObject jsonObject = new JSONObject();
